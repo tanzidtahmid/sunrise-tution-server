@@ -49,29 +49,29 @@ client.connect(err => {
         const description = req.body.description;
         console.log(file, title, description);
         const filePath = `${__dirname}/services/${file.name}`
-        file.mv(filePath, err => {
-            if (err) {
-                console.log(err)
-                return res.status(500).send({ msg: 'Failed To Upload The Image' })
-            }
-            const newImg = fs.readFileSync(filePath);
+        // file.mv(filePath, err => {
+        //     if (err) {
+        //         console.log(err)
+        //         return res.status(500).send({ msg: 'Failed To Upload The Image' })
+        //     }
+            const newImg =  req.files.file.data;
             const enImg = newImg.toString('base64');
             var image = {
                 contetType: req.files.file.mimetype,
                 size: req.files.file.size,
-                img: Buffer(enImg, 'base64')
+                img: Buffer.from(enImg, 'base64')
             };
             serviceCollection.insertOne({ title, description, image })
                 .then(result => 
-                    fs.remove(filePath, error => {
-                        if (error) {
-                            console.log(error)
-                        }
+                    // fs.remove(filePath, error => {
+                    //     if (error) {
+                    //         console.log(error)
+                    //     }
                         res.send(result.insertedCount > 0)
-                    })
+                    // })
                 )
 
-        })
+        // })
     })
 
 
@@ -81,30 +81,30 @@ client.connect(err => {
         const schoolName = req.body.schoolName;
         const reviewText = req.body.reviewText;
         console.log(file, name, schoolName,reviewText);
-        const filePath = `${__dirname}/reviewers/${file.name}`
-        file.mv(filePath, err => {
-            if (err) {
-                console.log(err)
-                return res.status(500).send({ msg: 'Failed To Upload The Image' })
-            }
-            const newImg = fs.readFileSync(filePath);
+        // const filePath = `${__dirname}/reviewers/${file.name}`
+        // file.mv(filePath, err => {
+        //     if (err) {
+        //         console.log(err)
+        //         return res.status(500).send({ msg: 'Failed To Upload The Image' })
+        //     }
+            const newImg =  req.files.file.data;
             const enImg = newImg.toString('base64');
             var image = {
                 contetType: req.files.file.mimetype,
                 size: req.files.file.size,
-                img: Buffer(enImg, 'base64')
+                img: Buffer.from(enImg, 'base64')
             };
             reviewsCollection.insertOne({ name, schoolName, reviewText, image })
                 .then(result => 
-                    fs.remove(filePath, error => {
-                        if (error) {
-                            console.log(error)
-                        }
+                    // fs.remove(filePath, error => {
+                    //     if (error) {
+                    //         console.log(error)
+                    //     }
                         res.send(result.insertedCount > 0)
-                    })
+                    // })
                 )
 
-        })
+        // })
     })
 
 
@@ -174,6 +174,6 @@ client.connect(err => {
 });
 
 
-app.listen(port, () => {
+app.listen( process.env.PORT || port, () => {
     console.log(`Example app listening at http://localhost:${port}`)
 })
